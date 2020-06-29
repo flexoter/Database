@@ -6,7 +6,7 @@
 using namespace std;
 
 Date::Date()
-    : _year(0), _month(0), _day(0) {}
+    : _year(0), _month(0), _day(0), _sep('-') {}
 
 Date::Date(int t_year, int t_month, int t_day)
     : _year(t_year), _month(t_month), _day(t_day) {}
@@ -21,6 +21,10 @@ int Date::GetMonth() const {
 
 int Date::GetDay() const {
     return _day;
+}
+
+char Date::GetSep() const {
+    return _sep;
 }
 
 bool IsDigit(string::iterator t_it1, string::iterator t_it2) {
@@ -63,4 +67,67 @@ Date ParseDate(istream& t_is) {
         throw invalid_argument("Day has to be in range [1, 31]");
     }
     return Date(year, month, day);
+}
+
+std::ostream& operator<<(std::ostream& t_os, const Date& t_date) {
+    char separator = t_date.GetSep();
+    t_os << t_date.GetYear() << separator << t_date.GetMonth() << separator << t_date.GetDay();
+}
+
+bool operator<(const Date& t_d1, const Date& t_d2) {
+    if ( t_d1.GetYear() == t_d2.GetYear() ) {
+        if ( t_d1.GetMonth() == t_d2.GetMonth() ) {
+            return t_d1.GetDay() < t_d2.GetDay();
+        }
+        return t_d1.GetMonth() < t_d2.GetMonth();
+    }
+    return t_d1.GetYear() < t_d2.GetYear();
+}
+
+bool operator<=(const Date& t_d1, const Date& t_d2) {
+    if ( t_d1.GetYear() == t_d2.GetYear() ) {
+        if ( t_d1.GetMonth() == t_d2.GetMonth() ) {
+            return t_d1.GetDay() <= t_d2.GetDay();
+        }
+        return t_d1.GetMonth() < t_d2.GetMonth();
+    }
+    return t_d1.GetYear() < t_d2.GetYear();
+}
+
+bool operator>(const Date& t_d1, const Date& t_d2) {
+    if ( t_d1.GetYear() == t_d2.GetYear() ) {
+        if ( t_d1.GetMonth() == t_d2.GetMonth() ) {
+            return t_d1.GetDay() > t_d2.GetDay();
+        }
+        return t_d1.GetMonth() > t_d2.GetMonth();
+    }
+    return t_d1.GetYear() > t_d2.GetYear();
+}
+
+bool operator>=(const Date& t_d1, const Date& t_d2) {
+    if ( t_d1.GetYear() == t_d2.GetYear() ) {
+        if ( t_d1.GetMonth() == t_d2.GetMonth() ) {
+            return t_d1.GetDay() >= t_d2.GetDay();
+        }
+        return t_d1.GetMonth() > t_d2.GetMonth();
+    }
+    return t_d1.GetYear() > t_d2.GetYear();
+}
+
+bool operator==(const Date& t_d1, const Date& t_d2) {
+    if ( t_d1.GetYear() == t_d2.GetYear() ) {
+        if ( t_d1.GetMonth() == t_d2.GetMonth() ) {
+            return t_d1.GetDay() == t_d2.GetDay();
+        }
+    }
+    return false;
+}
+
+bool operator!=(const Date& t_d1, const Date& t_d2) {
+    if ( t_d1.GetYear() != t_d2.GetYear() ) {
+        if ( t_d1.GetMonth() != t_d2.GetMonth() ) {
+            return t_d1.GetDay() != t_d2.GetDay();
+        }
+    }
+    return false;
 }
