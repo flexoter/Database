@@ -6,17 +6,18 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <functional>
 
 
 class Database {
 
     public:
 
-        void Add(const Date& t_date, const std::string& t_event);
-        void Print() const;
-        int RemoveIf( bool t_pred(const Date&, const std::string&) );
-        std::vector<std::string> FindIf(bool t_pred(const Date&, const std::string&)) const;
-        std::string Last(const std::string& t_date) const;
+        void Add(const Date&, const std::string&);
+        void Print(ostream&) const;
+        int RemoveIf( std::function<bool(const Date&, const std::string&)> );
+        std::vector<std::string> FindIf( std::function<bool(const Date&, const std::string&)> ) const;
+        std::string Last(const Date&) const;
 
     private:
 
@@ -24,7 +25,5 @@ class Database {
 
 
 };
-
-#include "date.cpp";
 
 #endif /*H_DATABASE*/

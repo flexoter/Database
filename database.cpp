@@ -11,14 +11,14 @@ void Database::Add(const Date& t_date, const std::string& t_event) {
     on_date.push_back(t_event);
 }
 
-void Database::Print() const {
+void Database::Print(ostream& t_os) const {
     for (const auto& [date, events] : _database) {
         for (const auto& event : events) {
-            cout << date << " " << event << endl;
+            t_os << date << " " << event << endl;
         }
     }
 }
 
-int Database::RemoveIf( bool t_pred(const Date&, const std::string&) ) {
+int Database::RemoveIf( std::function<bool(const Date&, const std::string&)> ) {
     
 }
