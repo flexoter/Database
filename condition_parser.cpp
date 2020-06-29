@@ -79,7 +79,8 @@ shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
   }
 
   const map<LogicalOperation, unsigned> precedences = {
-      {LogicalOperation::Or, 1}, {LogicalOperation::And, 2}
+      {LogicalOperation::Or, 1},
+      {LogicalOperation::And, 2}
   };
 
   while (current != end && current->type != TokenType::PAREN_RIGHT) {
