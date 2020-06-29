@@ -16,8 +16,8 @@ enum class Comparison {
 };
 
 enum class LogicalOperation {
-    AND,
-    OR
+    And,
+    Or
 };
 
 class Node {
@@ -45,10 +45,10 @@ class LogicalOperationNode : public Node {
 
 };
 
-class DataComparisonNode : public Node {
+class DateComparisonNode : public Node {
 
     public:
-        DataComparisonNode(const Comparison&, const Date&);
+        DateComparisonNode(const Comparison&, const Date&);
         bool Evaluate(
             const Date&, 
             const string&) const override;
@@ -81,6 +81,5 @@ class EmptyNode : public Node {
             const string&) const override;
 
 };
-
 
 #endif /*H_NODE*/

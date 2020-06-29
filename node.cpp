@@ -15,18 +15,18 @@ bool LogicalOperationNode::Evaluate(
     const Date& date, 
     const string& event) const {
     switch (_op) {
-        case LogicalOperation::AND:
+        case LogicalOperation::And:
             return _left->Evaluate(date, event) 
             && _right->Evaluate(date, event);
-        case LogicalOperation::OR:
+        case LogicalOperation::Or:
             return _left->Evaluate(date, event) 
             || _right->Evaluate(date, event);
         default:
-            break;
+            return true;
     }
 }
 
-bool DataComparisonNode::GetComparator(
+bool DateComparisonNode::GetComparator(
     const Date& t_date) const {
         switch (_cmp) {
             case Comparison::Less:
@@ -42,16 +42,16 @@ bool DataComparisonNode::GetComparator(
             case Comparison::NotEqual:
                 return _date != t_date;
             default:
-                break;
+                return true;
     }
 }
 
-DataComparisonNode::DataComparisonNode(
+DateComparisonNode::DateComparisonNode(
     const Comparison& t_cmp, 
     const Date& t_date)
     : _cmp(t_cmp), _date(t_date) {}
 
-bool DataComparisonNode::Evaluate(
+bool DateComparisonNode::Evaluate(
     const Date& date, 
     const string& event) const {
         return GetComparator(date);
@@ -78,7 +78,7 @@ bool EventComparisonNode::GetComparator(
             case Comparison::NotEqual:
                 return _event != t_event;
             default:
-                break;
+                return true;
         }
     }
 
