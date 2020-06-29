@@ -8,6 +8,7 @@ class Date {
 
     public:
         Date();
+        Date(const Date&);
         Date(int, int, int);
 
         int GetYear() const;
