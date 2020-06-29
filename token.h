@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <vector>
+
 using namespace std;
 
 enum class TokenType {
@@ -22,5 +23,6 @@ struct Token {
 
 vector<Token> Tokenize(istream& cl);
 
+#include "token.cpp"
 
 #endif /*H_TOKEN*/
