@@ -12,11 +12,12 @@ using namespace std;
 
 string ParseEvent(istream& is) {
     string event{""};
+    is >> ws;
     getline(is, event);
     if (!event.empty()) {
         if (event.find_first_of(
             string(" \" ")) != string::npos) {
-            cout << "Given event contains symbol of \"\"";
+                // cout << "Given event contains symbol of \"\"";
         }
     }
     return event;
@@ -34,18 +35,44 @@ ostream& operator<<(
     return t_os;
 }
 
-const vector<string> input{
-        "10",
-        "ALL_BUSES",
-        "BUSES_FOR_STOP Marushkino",
-        "STOPS_FOR_BUS 32K",
-        "NEW_BUS 32 3 Tolstopaltsevo Marushkino Vnukovo",
-        "NEW_BUS 32K 6 Tolstopaltsevo Marushkino Vnukovo Peredelkino Solntsevo Skolkovo",
-        "BUSES_FOR_STOP Vnukovo",
-        "NEW_BUS 950 6 Kokoshkino Marushkino Vnukovo Peredelkino Solntsevo Troparyovo",
-        "NEW_BUS 272 4 Vnukovo Moskovsky Rumyantsevo Troparyovo",
-        "STOPS_FOR_BUS 272",
-        "ALL_BUSES",
+const vector<string> test1{
+        "Add 2017-11-21 Tuesday",
+        "Add 2017-11-20 Monday",
+        "Add 2017-11-21 Weekly meeting",
+        "Add 2017-11-21 sport event",
+        "Print",
+        "Find event != \"Weekly meeting\"",
+        "Find date >= 2017-01-01 AND date < 2017-12-01 AND event == \"sport event\"",
+        "Last 2017-11-20",
+        "Del date > 2017-11-20",
+        "Last 2017-11-30",
+        "Last 2017-11-01",
+    };
+
+const vector<string> test2{
+        "Add 2017-01-01 New Year",
+        "Add 2017-03-08 Holiday",
+        "Add 2017-01-01 Holiday",
+        "Last 2016-12-31",
+        "Last 2017-01-01",
+        "Last 2017-06-01",
+        "Add 2017-05-09 Holiday"
+    };
+
+const vector<string> test3{
+        "Add 2017-01-01 Holiday",
+        "Add 2017-03-08 Holiday",
+        "Add 2017-01-01 New Year",
+        "Find event != \"working day\"",
+        "Add 2017-05-09 Holiday1"
+    };
+
+const vector<string> test4{
+        "Add 2017-06-01 1st of June",
+        "Add 2017-07-08 8th of July",
+        "Add 2017-07-08 Someone's birthday",
+        "Del date == 2017-07-08",
+        "Print"
     };
 
 int main() {
@@ -54,7 +81,7 @@ int main() {
     Database db;
 
     // for (string line; getline(cin, line); ) {
-    for (const string& line : input) {
+    for (const string& line : test1) {
         istringstream is(line);
 
         string command;
