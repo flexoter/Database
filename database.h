@@ -13,20 +13,32 @@ class Database {
 
     public:
 
-        void Add(const Date&, const std::string&);
-        void Print(ostream&) const;
-        int RemoveIf( std::function<bool(const Date&, const std::string&)> );
-        using DatePair = pair<Date, std::string>;
+        void Add(
+            const Date&,
+            const std::string&);
+        void Print(std::ostream&) const;
+        int RemoveIf(
+            std::function<bool(
+                const Date&,
+                const std::string&)> );
+        using DatePair = std::pair<Date, std::string>;
         std::vector<DatePair>
-        FindIf( std::function<bool(const Date&, const std::string&)> ) const;
+        FindIf(
+            std::function<bool(
+                const Date&,
+                const std::string&)> ) const;
         DatePair Last(const Date&) const;
 
     private:
 
-        std::multimap<Date, std::string> _database;
+        std::map<Date, std::vector<std::string> > _database;
 
 
 };
+
+std::ostream& operator<<(
+    std::ostream& t_os, 
+    const pair<Date, std::vector<std::string>>& t_v);
 
 #include "database.cpp"
 
