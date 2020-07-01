@@ -1,6 +1,7 @@
 #include "date.h"
 
 #include <string>
+#include <iomanip>
 #include <algorithm>
 
 using namespace std;
@@ -33,7 +34,7 @@ char Date::GetSep() const {
 bool IsDigit(
     string::iterator t_it1,
     string::iterator t_it2) {
-    if ( t_it2 == t_it2 ) {
+    if ( t_it1 == t_it2 ) {
         return false;
     }
     unsigned int digits = count_if(
@@ -50,6 +51,7 @@ bool IsDigit(
 Date ParseDate(istream& t_is) {
     int year{0}, month{0}, day{0};
     string from_stream{""};
+    t_is >> ws;
     getline(t_is, from_stream, '-');
     if (!IsDigit(
         from_stream.begin(),
@@ -70,7 +72,7 @@ Date ParseDate(istream& t_is) {
             "Given date has wrong format");
     }
     month = stoi(from_stream);
-    if (month < 1 || year > 12) {
+    if (month < 1 || month > 12) {
         throw invalid_argument(
             "Month has to be in range [1, 12]");
     }
@@ -82,7 +84,7 @@ Date ParseDate(istream& t_is) {
             "Given date has wrong format");
     }
     day = stoi(from_stream);
-    if (year < 1 || year > 31) {
+    if (day < 1 || day > 31) {
         throw invalid_argument(
             "Day has to be in range [1, 31]");
     }
@@ -93,11 +95,17 @@ std::ostream& operator<<(
     std::ostream& t_os,
     const Date& t_date) {
     char separator = t_date.GetSep();
-    t_os << t_date.GetYear()
+    t_os << setw(4)
+            << setfill('0')
+            << to_string(t_date.GetYear())
             << separator
-            << t_date.GetMonth()
+            << setw(2)
+            << setfill('0')
+            << to_string(t_date.GetMonth())
             << separator
-            << t_date.GetDay();
+            << setw(2)
+            << setfill('0')
+            << to_string(t_date.GetDay());
     return t_os;
 }
 
@@ -163,10 +171,10 @@ bool operator==(
 bool operator!=(
     const Date& t_d1,
     const Date& t_d2) {
-    if ( t_d1.GetYear() != t_d2.GetYear() ) {
-        if ( t_d1.GetMonth() != t_d2.GetMonth() ) {
+    if ( t_d1.GetYear() == t_d2.GetYear() ) {
+        if ( t_d1.GetMonth() == t_d2.GetMonth() ) {
             return t_d1.GetDay() != t_d2.GetDay();
         }
     }
-    return false;
+    return true;
 }
