@@ -30,17 +30,17 @@ bool DateComparisonNode::GetComparator(
     const Date& t_date) const {
         switch (_cmp) {
             case Comparison::Less:
-                return _date < t_date;
+                return t_date < _date;
             case Comparison::LessOrEqual:
-                return _date <= t_date;
+                return t_date <= _date;
             case Comparison::Greater:
-                return _date > t_date;
+                return t_date > _date;
             case Comparison::GreaterOrEqual:
-                return _date >= t_date;
+                return t_date >= _date;
             case Comparison::Equal:
-                return _date == t_date;
+                return t_date == _date;
             case Comparison::NotEqual:
-                return _date != t_date;
+                return t_date != _date;
             default:
                 return true;
     }
@@ -66,17 +66,17 @@ bool EventComparisonNode::GetComparator(
     const string& t_event) const {
         switch (_cmp) {
             case Comparison::Less:
-                return _event < t_event;
+                return t_event < _event;
             case Comparison::LessOrEqual:
-                return _event <= t_event;
+                return t_event <= _event;
             case Comparison::Greater:
-                return _event > t_event;
+                return t_event > _event;
             case Comparison::GreaterOrEqual:
-                return _event >= t_event;
+                return t_event >= _event;
             case Comparison::Equal:
-                return _event == t_event;
+                return t_event == _event;
             case Comparison::NotEqual:
-                return _event != t_event;
+                return t_event != _event;
             default:
                 return true;
         }
@@ -91,5 +91,5 @@ bool EventComparisonNode::Evaluate(
 bool EmptyNode::Evaluate(
     const Date& date, 
     const string& event) const {
-    return true;
+        return true;
 }
