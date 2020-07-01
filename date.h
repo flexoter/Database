@@ -2,6 +2,7 @@
 #define H_DATE
 
 #include <string>
+#include <vector>
 #include <iostream>
 
 class Date {
@@ -26,13 +27,18 @@ class Date {
 
 Date ParseDate(std::istream&);
 std::ostream& operator<<(std::ostream&, const Date&);
+std::ostream& operator<<(
+    std::ostream&,
+    const std::pair<Date, std::vector<std::string>>&);
+std::ostream& operator<<(
+    std::ostream&,
+    const std::pair<Date, std::string>&);
 bool operator<(const Date&, const Date&);
 bool operator<=(const Date&, const Date&);
 bool operator>(const Date&, const Date&);
 bool operator>=(const Date&, const Date&);
 bool operator==(const Date&, const Date&);
 bool operator!=(const Date&, const Date&);
-
 
 #include "date.cpp"
 

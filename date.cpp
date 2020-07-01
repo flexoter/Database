@@ -93,6 +93,22 @@ Date ParseDate(istream& t_is) {
 
 std::ostream& operator<<(
     std::ostream& t_os,
+    const pair<Date, std::string>& t_p) {
+        t_os << t_p.first << " " << t_p.second;
+        return t_os;
+    }
+
+ostream& operator<<(
+    ostream& t_os, 
+    const pair<Date, vector<string>>& t_v) {
+        for (const string& s : t_v.second) {
+            t_os << t_v.first << " " << s << endl;
+        }
+    return t_os;
+}
+
+std::ostream& operator<<(
+    std::ostream& t_os,
     const Date& t_date) {
     char separator = t_date.GetSep();
     t_os << setw(4)
