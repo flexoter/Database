@@ -17,6 +17,8 @@ std::ostream& operator << (std::ostream& os, const std::map<K, V>& s);
 template<class T, class U>
 void AssertEqual(const T& t, const U& u, const std::string& hint);
 
+void Assert(bool b, const std::string& hint);
+
 class TestRunner {
 public:
   template <class TestFunc>
