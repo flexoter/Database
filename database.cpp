@@ -2,24 +2,31 @@
 
 #include <vector>
 #include <algorithm>
+#include <iterator>
+#include <string>
 #include <iostream>
 
 using namespace std;
 
-using DatePair = pair<Date, vector<string> >;
+using DatePair = pair<Date, string>;
 void Database::Add(
     const Date& t_date, 
     const std::string& t_event) {
-        auto& on_date{_database[t_date]};
-        on_date.push_back(t_event);
+        _database.insert(make_pair(t_date, t_event));
     }
 
+ostream& operator<<(
+    ostream& t_os,
+    const DatePair& t_p) {
+        t_os << t_p.first << " " << t_p.second;
+        return t_os;
+}
+
 void Database::Print(ostream& t_os) const {
-    for (const auto& [date, events] : _database) {
-        for (const string& event : events) {
-            t_os << date << " " << event << endl;
-        }
-    }
+    copy(
+        _database.begin(),
+        _database.end(),
+        ostream_iterator<DatePair>(t_os, "\n"));
 }
 
 int Database::RemoveIf(
@@ -27,19 +34,17 @@ int Database::RemoveIf(
         const Date&,
         const std::string&)> t_pred) {
         unsigned int erased{0};
-        for (auto it = _database.begin(); it != _database.end(); it++) {
-            Date date{it->first};
-            if ( t_pred(date, string{""}) ) {
-                erased = it->second.size();
-                it = _database.erase(it);
-                continue;
-            }
-            const auto to_erase = remove_if(
-                it->second.begin(),
-                it->second.end(),
-                [date, t_pred] (const auto& s) { return t_pred(date, s); });
-            erased = distance(to_erase, it->second.end());
-            it->second.erase(to_erase, it->second.end());
+        for (
+            auto it = _database.begin();
+            it != _database.end();
+            it++) {
+                Date date{it->first};
+                string event{it->second};
+                if ( t_pred( date, event ) ) {
+                    erased++;
+                    _database.erase(it);
+                    continue;
+                }
         }
         return erased;
 }
@@ -50,24 +55,26 @@ Database::FindIf(
         const Date&,
         const std::string&)> t_pred) const {
         vector<DatePair> found;
-        for (auto it = _database.begin(); it != _database.end(); it++) {
-            Date date{it->first};
-            if ( t_pred(date, string{""}) ) {
-                found.push_back(make_pair(date, it->second));
-                continue;
-            }
-            vector<string> events;
-            copy_if(
-                it->second.begin(),
-                it->second.end(),
-                back_inserter(events),
-                [date, t_pred] (const auto& s) { return t_pred(date, s); });
-            transform(
-                events.begin(),
-                events.end(),
-                back_inserter(found),
-                [date] (const string& s) { return make_pair(date, s); });
-                events.clear();
+        for (
+            auto it = _database.begin();
+            it != _database.end();
+            it++) {
+                Date date{it->first};
+                string event{it->second};
+                if ( t_pred(date, event) ) {
+                    found.push_back(make_pair(date, event));
+                    continue;
+                }
         }
         return found;
+}
+
+DatePair Database::Last(const Date& t_date) const {
+    const auto last = _database.upper_bound(t_date);
+    if ( last == _database.begin() ) {
+        throw invalid_argument(
+            string{"Given date is greater "}
+            + string{"than all of the data base elements"});
+    }
+    return (*prev(last));
 }
