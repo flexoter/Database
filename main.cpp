@@ -3,6 +3,8 @@
 #include "condition_parser.h"
 #include "node.h"
 #include "test_runner.h"
+#include "database_test.cpp"
+
 
 #include <iostream>
 #include <string>
@@ -17,7 +19,6 @@ string ParseEvent(istream& is) {
     if (!event.empty()) {
         if (event.find_first_of(
             string(" \" ")) != string::npos) {
-                // cout << "Given event contains symbol of \"\"";
         }
     }
     return event;
@@ -25,23 +26,13 @@ string ParseEvent(istream& is) {
 
 void TestAll();
 
-
-ostream& operator<<(
-    ostream& t_os, 
-    const pair<Date, vector<string>>& t_v) {
-        for (const string& s : t_v.second) {
-            t_os << t_v.first << " " << s << endl;
-        }
-    return t_os;
-}
-
 const vector<string> test1{
         "Add 2017-11-21 Tuesday",
         "Add 2017-11-20 Monday",
         "Add 2017-11-21 Weekly meeting",
         "Add 2017-11-21 sport event",
         "Print",
-        "Find event != \"Weekly meeting\"",
+        // "Find event != \"Weekly meeting\"",
         "Find date >= 2017-01-01 AND date < 2017-12-01 AND event == \"sport event\"",
         "Last 2017-11-20",
         "Del date > 2017-11-20",
@@ -63,14 +54,16 @@ const vector<string> test3{
         "Add 2017-01-01 Holiday",
         "Add 2017-03-08 Holiday",
         "Add 2017-01-01 New Year",
-        "Find event != \"working day\"",
+        "Find event == \"sport event\"",
         "Add 2017-05-09 Holiday1"
     };
 
 const vector<string> test4{
         "Add 2017-06-01 1st of June",
+        "Add 2017-06-01 1st of June",
         "Add 2017-07-08 8th of July",
         "Add 2017-07-08 Someone's birthday",
+        "Print",
         "Del date == 2017-07-08",
         "Print"
     };
@@ -151,4 +144,11 @@ void TestAll() {
     TestRunner tr;
     tr.RunTest(TestParseEvent, "TestParseEvent");
     tr.RunTest(TestParseCondition, "TestParseCondition");
+    tr.RunTest(TestEmptyNode, "Тест 2 из Coursera");
+    tr.RunTest(TestDbAdd, "Тест 3(1) из Coursera");
+    tr.RunTest(TestDbFind, "Тест 3(2) из Coursera");
+    tr.RunTest(TestDbLast, "Тест 3(3) из Coursera");
+    tr.RunTest(TestDbRemoveIf, "Тест 3(4) из Coursera");
+    tr.RunTest(TestInsertionOrder, "Тест на порядок вывода");
+    tr.RunTest(TestDatabase, "Тест базы данных с GitHub");
 }
