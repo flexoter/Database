@@ -34,18 +34,18 @@ char Date::GetSep() const {
 bool IsDigit(
     string::iterator t_it1,
     string::iterator t_it2) {
-    if ( t_it1 == t_it2 ) {
-        return false;
-    }
-    unsigned int digits = count_if(
-        t_it1,
-        t_it2,
-        [](const char& c)
-        { return isdigit(c); });
-    if (digits != distance(t_it1, t_it2)) {
-        return false;
-    }
-    return true;
+        if ( t_it1 == t_it2 ) {
+            return false;
+        }
+        unsigned int digits = count_if(
+            t_it1,
+            t_it2,
+            [](const char& c)
+            { return isdigit(c); });
+        if (digits != distance(t_it1, t_it2)) {
+            return false;
+        }
+        return true;
 }
 
 Date ParseDate(istream& t_is) {

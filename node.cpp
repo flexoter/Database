@@ -22,7 +22,7 @@ bool LogicalOperationNode::Evaluate(
             return _left->Evaluate(date, event) 
             || _right->Evaluate(date, event);
         default:
-            return true;
+            return false;
     }
 }
 
@@ -42,7 +42,7 @@ bool DateComparisonNode::GetComparator(
             case Comparison::NotEqual:
                 return t_date != _date;
             default:
-                return true;
+                return false;
     }
 }
 
@@ -78,7 +78,7 @@ bool EventComparisonNode::GetComparator(
             case Comparison::NotEqual:
                 return t_event != _event;
             default:
-                return true;
+                return false;
         }
     }
 
