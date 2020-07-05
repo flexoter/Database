@@ -1,6 +1,24 @@
 #include "test_runner.h"
-#include "condition_parser.h"
 #include "database.h"
+#include "condition_parser.h"
+#include "node.h"
+#include "test_runner.h"
+
+#include <sstream>
+
+/*
+Вставить в main
+------------------------------------------------------
+  tr.RunTest(TestEmptyNode, "Тест 2 из Coursera");
+  tr.RunTest(TestDbAdd, "Тест 3(1) из Coursera");
+  tr.RunTest(TestDbFind, "Тест 3(2) из Coursera");
+  tr.RunTest(TestDbLast, "Тест 3(3) из Coursera");
+  tr.RunTest(TestDbRemoveIf, "Тест 3(4) из Coursera");
+  tr.RunTest(TestInsertionOrder, "Тест на порядок вывода");
+  tr.RunTest(TestsMyCustom, "Мои тесты");
+  tr.RunTest(TestDatabase, "Тест базы данных с GitHub");
+ -------------------------------------------------------
+ */
 
 using namespace std;
 
@@ -11,6 +29,10 @@ class AlwaysFalseNode : public Node {
 };
 
 string ParseEvent(istream& is);
+
+pair<Date,string> Entry(const Date& date, const string& str){
+  return {date,str};
+}
 
 int DoRemove (Database& db, const string& str) {
     istringstream is (str);
@@ -189,9 +211,9 @@ void TestsMyCustom()
 
     {
         Database db;
-        db.Add({2019, 12, 1}, "c");
+        db.Add({2019, 12, 1}, "a");
         db.Add({2019, 12, 1}, "b");
-        db.Add({2019, 12, 2}, "f");
+        db.Add({2019, 12, 2}, "c");
         db.Add({2019, 12, 2}, "d");
         db.Add({2019, 12, 3}, "e");
         ostringstream out;
@@ -211,11 +233,11 @@ void TestsMyCustom()
 
     {
         Database db;
-        db.Add({2019, 12, 1}, "f");
+        db.Add({2019, 12, 1}, "a");
         db.Add({2019, 12, 1}, "b");
         db.Add({2019, 12, 2}, "c c");
-        db.Add({2019, 12, 2}, "e");
-        db.Add({2019, 12, 3}, "d");
+        db.Add({2019, 12, 2}, "d");
+        db.Add({2019, 12, 3}, "e");
         db.Add({2019, 12, 3}, "f");
         ostringstream out;
         db.Print(out);
@@ -224,6 +246,8 @@ void TestsMyCustom()
         AssertEqual(1, DoRemove(db, R"(event == "e" AND event != "a")" ), "My test 4");
         db.Add({2019, 11, 30}, "a");
         AssertEqual("2019-12-03 f\n1", DoFind(db, R"(date >= 2019-12-3)"), "My test 5");
+        AssertEqual(Entry({2019, 12, 3}, "f"), db.Last({2019, 12, 4}), " My test 6");
+
         try
         {
             db.Last({2019, 11, 3});    
@@ -233,7 +257,14 @@ void TestsMyCustom()
             cerr << "Тест на No entries OK" << endl;
         }
 
-        AssertEqual(0, DoRemove(db, R"(event == "e" AND event != "a" OR event == "m" AND date == 2019-12-3)" ), "My test 10");
+        AssertEqual(Entry({2019, 12, 2}, "c c"), db.Last({2019, 12, 2}), " My test 7");
+
+        AssertEqual(Entry({2019, 12, 3}, "f"), db.Last({2019, 12, 4}), " My test 8");
+        
+        db.Add({2019, 12, 3}, "m");
+        AssertEqual(Entry({2019, 12, 3}, "m"), db.Last({2019, 12, 3}), " My test 9");
+
+        AssertEqual(1, DoRemove(db, R"(event == "e" AND event != "a" OR event == "m" AND date == 2019-12-3)" ), "My test 10");
 
         ostringstream out2;
         db.Print(out2);
@@ -242,11 +273,11 @@ void TestsMyCustom()
 
     {
         Database db;
-        db.Add({2019, 12, 1}, "c");
+        db.Add({2019, 12, 1}, "a");
         db.Add({2019, 12, 1}, "b");
-        db.Add({2019, 12, 1}, "c");
+        db.Add({2019, 12, 1}, "a");
         db.Add({2019, 12, 2}, "c");
-        db.Add({2019, 12, 2}, "b");
+        db.Add({2019, 12, 2}, "a");
         db.Add({2019, 12, 2}, "a");
 
         AssertEqual(2, DoRemove(db, R"(event == "a")" ), "My test 12");
@@ -254,7 +285,7 @@ void TestsMyCustom()
 
     {
         Database db;
-        db.Add({2019, 12, 1}, "aaa");
+        db.Add({2019, 12, 1}, "a");
         db.Add({2019, 12, 1}, "aa");
         db.Add({2019, 12, 1}, "aaa");
 
@@ -304,7 +335,11 @@ void TestsMyCustom()
 
         db.Add({2019, 12, 1}, "c");
 
+        AssertEqual(Entry({2019, 12, 1}, "c"), db.Last({2019, 12, 1}), " My test 20");
+
         db.Add({2019, 12, 1}, "b");
+        AssertEqual(Entry({2019, 12, 1}, "c"), db.Last({2019, 12, 1}), " My test 21");
+
         ostringstream out;
         db.Print(out);
         AssertEqual("2019-12-01 b\n2019-12-01 c\n", out.str(), "My test 22");
@@ -348,6 +383,42 @@ void TestDatabase() {
       return condition->Evaluate(date, event);
     };    
     AssertEqual(db.FindIf(predicate).size(), 1, "Db Add Duplicates 1");
+  }
+
+  // Last
+  {
+    Database db;
+    Date d(2019, 1, 1);
+    Date d1(2019, 1, 2);
+    Date d2(2018, 12, 22);
+    db.Add(d1, "e1");
+    db.Add(d2, "e2");
+    AssertEqual(db.Last(d), Entry({2018, 12, 22}, "e2"), "Db Last 1");
+    Date d3(2018, 12, 24);
+    db.Add(d3, "e3");
+    AssertEqual(db.Last(d), Entry({2018, 12, 24}, "e3"), "Db Last 2");
+
+    // Get last event for date before first event 
+    try {
+      Date d4(2017, 2, 2);
+      db.Last(d4);
+      Assert(false, "Db Last 3");
+    } catch (invalid_argument e) {
+      // Pass
+    }
+
+    // Delete event and get last
+    istringstream is("date == 2018-12-24");
+    auto condition = ParseCondition(is);
+    auto predicate = [condition](const Date& date, const string& event) {
+      return condition->Evaluate(date, event);
+    };    
+    db.RemoveIf(predicate);
+    AssertEqual(db.Last(d), Entry({2018, 12, 22}, "e2"), "Db Last 4");
+
+    AssertEqual(db.Last(d1), Entry({2019, 1, 2}, "e1"), "Db Last 5");
+    db.Add(d2, "e4");
+    AssertEqual(db.Last(d2), Entry({2018, 12, 22}, "e4"), "Db Last 6");
   }
 
   // Del
