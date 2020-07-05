@@ -18,10 +18,8 @@ class Database {
             const Date&,
             const std::string&);
         void Print(std::ostream&) const;
-        void RemoveVectorContainer(
-            const std::map<Date, std::vector<std::string>::iterator >&);
         void RemoveSetContainer(
-            const std::map<Date, std::vector<std::string>::iterator >&);
+            const std::vector<Date>&);
         int RemoveIf(
             std::function<bool(
                 const Date&,
