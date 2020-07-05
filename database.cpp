@@ -27,28 +27,19 @@ void Database::Print(ostream& t_os) const {
 }
 
 void Database::RemoveSetContainer(
-    const map<Date, vector<std::string>::iterator >& t_erased) {
-        if ( t_erased.empty() ) {
-            _database.clear();
-        }
-        for (const auto& [date, _] : t_erased) {
+    const vector<Date>& t_erased) {
+        for (const Date& date : t_erased) {
             const auto erase_it{
                 _database.find(date)};
             _database.erase(erase_it);
             auto& on_date = _database[date];
-            const auto& from_order = _order.at(date);
-            copy(
-                from_order.begin(),
-                from_order.end(),
-                inserter(on_date, on_date.begin()));
-        }
-    }
-
-void Database::RemoveVectorContainer(
-    const map<Date, vector<std::string>::iterator >& t_erased) {
-        for (const auto& [date, it] : t_erased) {
-            auto& on_date = _order.at(date);
-            on_date.erase(on_date.begin(), it);
+            try {
+                const auto& from_order = _order.at(date);
+                copy(
+                    from_order.begin(),
+                    from_order.end(),
+                    inserter(on_date, on_date.begin()));
+            } catch (out_of_range) {}
         }
     }
 
@@ -57,7 +48,7 @@ int Database::RemoveIf(
         const Date&,
         const std::string&)> t_pred) {
         unsigned int erased{0};
-        map<Date, vector<std::string>::iterator > erased_map;
+        vector<Date> database_dates;
         for (
             auto it = _order.begin();
             it != _order.end();
@@ -75,18 +66,18 @@ int Database::RemoveIf(
                 };
                 erased += erased_number;
                 if ( erased_number > 0 ) {
-                    if ( erased_number == it->second.size() ) {
-                        it = _order.erase(it);
-                    } else {
-                        erased_map[date] = to_erase;
+                    if ( erased_number != it->second.size() ) {
+                        it->second.erase(it->second.begin(), to_erase);
                         it++;
+                    } else {
+                        it = _order.erase(it);
                     }
+                    database_dates.push_back(date);
                     continue;
                 }
                 it++;
             }
-        RemoveVectorContainer(erased_map);
-        RemoveSetContainer(erased_map);
+        RemoveSetContainer(database_dates);
         return erased;
 }
 
