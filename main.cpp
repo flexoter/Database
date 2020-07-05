@@ -33,17 +33,17 @@ string ParseEvent(istream& is) {
 
 const vector<string> test1{
         "Add 2017-11-6 z",
-        // "Add 2017-11-19 Monday",
-        // "Add 2017-11-13 sport event",
-        // "Add 2017-11-10 weekly meeting",
-        // "Add 2017-11-7 sport event",
-        // "Print",
-        // // "Find event != \"Weekly meeting\"",
-        "Del",
-        // // "Last 2017-11-20",
+        "Add 2017-11-19 Monday",
+        "Add 2017-11-13 sport event",
+        "Add 2017-11-10 weekly meeting",
+        "Add 2017-11-7 sport event",
         "Print",
-        // "Last 2017-11-30",
-        // "Last 2017-11-01"
+        "Find event != \"Weekly meeting\"",
+        "Del",
+        "Last 2017-11-20",
+        "Print",
+        "Last 2017-11-30",
+        "Last 2017-11-01"
     };
 
 const vector<string> test2{
@@ -81,6 +81,37 @@ const vector<string> test5{
     "Find date == 2017-1-1"
 };
 
+const vector<string> test6{
+    "Add 2017-1-1 a",
+    "Add 2017-1-1 aa",
+    "Add 2017-1-1 aaa",
+    "Add 2017-1-1 aaaa",
+    "Last 2017-1-1",
+    "Last 1990-1-1",
+    "Del",
+    "Print",
+    "Add 2017-1-1 a",
+    "Add 2017-1-1 aa",
+    "Add 2017-1-1 aaa",
+    "Add 2017-1-1 aaaa",
+    "Last 2017-1-1",
+    "Last 1990-1-1",
+    "Del",
+    "Print",
+    "Last 2017-1-1",
+    "Last 1990-1-1"
+};
+
+const vector<string> test7{
+    "Add 2017-01-01 event3",
+    "Add 2017-01-01 event2",
+    "Add 2017-01-01 event1",
+    "Add 2018-01-01 some event",
+    "Add 2018-01-01 another event",
+    "Add 2018-01-01 big event",
+    "Del date == 2017-01-01 OR event == \"some event\"",
+};
+
 vector<vector<string> > tests{
     test1,
     test2,
@@ -92,12 +123,11 @@ void TestAll();
 
 int main() {
 
-    // TestAll();
+    TestAll();
 
     Database db;
 
-    // for (string line; getline(cin, line); ) {
-    for (const string& line : test4) {
+    for (string line; getline(cin, line); ) {
         istringstream is(line);
 
         string command;
@@ -146,9 +176,13 @@ int main() {
 }
 
 void TestAll() {
-    TestRunner Tr;
-    Tr.RunTest(TestDbAdd, "Add Method Test");
-    Tr.RunTest(TestDbFind, "FindIf Method Test");
-    Tr.RunTest(TestDbLast, "Last Method Test");
-    Tr.RunTest(TestDatabase, "RemoveIf Method Test");
+    TestRunner tr;
+    tr.RunTest(TestEmptyNode, "Тест 2 из Coursera");
+    tr.RunTest(TestDbAdd, "Тест 3(1) из Coursera");
+    tr.RunTest(TestDbFind, "Тест 3(2) из Coursera");
+    tr.RunTest(TestDbLast, "Тест 3(3) из Coursera");
+    tr.RunTest(TestDbRemoveIf, "Тест 3(4) из Coursera");
+    tr.RunTest(TestInsertionOrder, "Тест на порядок вывода");
+    tr.RunTest(TestsMyCustom, "Мои тесты");
+    tr.RunTest(TestDatabase, "Тест базы данных с GitHub");
 }
