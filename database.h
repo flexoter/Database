@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 #include <functional>
 
 
@@ -17,29 +18,32 @@ class Database {
             const Date&,
             const std::string&);
         void Print(std::ostream&) const;
+        void RemoveVectorContainer(
+            const std::map<Date, std::vector<std::string>::iterator >&);
+        void RemoveSetContainer(
+            const std::map<Date, std::vector<std::string>::iterator >&);
         int RemoveIf(
             std::function<bool(
                 const Date&,
                 const std::string&)> );
-        using DatePair = std::pair<Date, std::string>;
-        std::vector<DatePair>
+        std::vector<std::pair<Date, std::string> >
         FindIf(
             std::function<bool(
                 const Date&,
                 const std::string&)> ) const;
-        DatePair Last(const Date&) const;
+        std::pair<Date, std::string>
+        Last(const Date&) const;
 
     private:
 
-        std::map<Date, std::vector<std::string> > _database;
+        std::map<Date, std::set<std::string> > _database;
+        std::map<Date, std::vector<std::string> > _order;
 
 
 };
 
 std::ostream& operator<<(
     std::ostream& t_os, 
-    const pair<Date, std::vector<std::string>>& t_v);
-
-#include "database.cpp"
+    const std::pair<Date, std::vector<std::string>>& t_v);
 
 #endif /*H_DATABASE*/

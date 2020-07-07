@@ -10,10 +10,4 @@ using namespace std;
 
 std::shared_ptr<Node> ParseCondition(std::istream& is);
 
-void TestParseCondition();
-
-#include "node.cpp"
-#include "condition_parser.cpp"
-#include "condition_parser_test.cpp"
-
 #endif /*H_CONDITION_PARSER*/

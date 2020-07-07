@@ -28,7 +28,5 @@ private:
   int fail_count = 0;
 };
 
-#include "test_runner.cpp"
-
 #endif /*H_TEST*/
 

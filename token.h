@@ -23,6 +23,4 @@ struct Token {
 
 std::vector<Token> Tokenize(std::istream& cl);
 
-#include "token.cpp"
-
 #endif /*H_TOKEN*/

@@ -40,6 +40,4 @@ bool operator>=(const Date&, const Date&);
 bool operator==(const Date&, const Date&);
 bool operator!=(const Date&, const Date&);
 
-#include "date.cpp"
-
 #endif /*H_DATE*/

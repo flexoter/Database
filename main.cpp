@@ -3,10 +3,17 @@
 #include "condition_parser.h"
 #include "node.h"
 #include "test_runner.h"
+
+#include "database.cpp"
+#include "date.cpp"
+#include "condition_parser.cpp"
+#include "node.cpp"
+#include "token.cpp"
+#include "test_runner.cpp"
 #include "database_test.cpp"
 
-
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <stdexcept>
 
@@ -24,20 +31,19 @@ string ParseEvent(istream& is) {
     return event;
 }
 
-void TestAll();
-
 const vector<string> test1{
-        "Add 2017-11-21 Tuesday",
-        "Add 2017-11-20 Monday",
-        "Add 2017-11-21 Weekly meeting",
-        "Add 2017-11-21 sport event",
+        "Add 2017-11-6 z",
+        // "Add 2017-11-19 Monday",
+        // "Add 2017-11-13 sport event",
+        // "Add 2017-11-10 weekly meeting",
+        // "Add 2017-11-7 sport event",
+        // "Print",
+        // // "Find event != \"Weekly meeting\"",
+        "Del",
+        // // "Last 2017-11-20",
         "Print",
-        // "Find event != \"Weekly meeting\"",
-        "Find date >= 2017-01-01 AND date < 2017-12-01 AND event == \"sport event\"",
-        "Last 2017-11-20",
-        "Del date > 2017-11-20",
-        "Last 2017-11-30",
-        "Last 2017-11-01",
+        // "Last 2017-11-30",
+        // "Last 2017-11-01"
     };
 
 const vector<string> test2{
@@ -68,13 +74,30 @@ const vector<string> test4{
         "Print"
     };
 
+const vector<string> test5{
+    "Add 2017-01-01 event3",
+    "Add 2017-01-01 event2",
+    "Add 2017-01-01 event1",
+    "Find date == 2017-1-1"
+};
+
+vector<vector<string> > tests{
+    test1,
+    test2,
+    test3,
+    test4
+};
+
+void TestAll();
+
 int main() {
-    TestAll();
+
+    // TestAll();
 
     Database db;
 
     // for (string line; getline(cin, line); ) {
-    for (const string& line : test1) {
+    for (const string& line : test4) {
         istringstream is(line);
 
         string command;
@@ -122,33 +145,10 @@ int main() {
     return 0;
 }
 
-void TestParseEvent() {
-    {
-    istringstream is("event");
-    AssertEqual(ParseEvent(is), "event", "Parse event without leading spaces");
-    }
-    {
-    istringstream is("   sport event ");
-    AssertEqual(ParseEvent(is), "sport event ", "Parse event with leading spaces");
-    }
-    {
-    istringstream is("  first event  \n  second event");
-    vector<string> events;
-    events.push_back(ParseEvent(is));
-    events.push_back(ParseEvent(is));
-    AssertEqual(events, vector<string>{"first event  ", "second event"}, "Parse multiple events");
-    }
-}
-
 void TestAll() {
-    TestRunner tr;
-    tr.RunTest(TestParseEvent, "TestParseEvent");
-    tr.RunTest(TestParseCondition, "TestParseCondition");
-    tr.RunTest(TestEmptyNode, "Тест 2 из Coursera");
-    tr.RunTest(TestDbAdd, "Тест 3(1) из Coursera");
-    tr.RunTest(TestDbFind, "Тест 3(2) из Coursera");
-    tr.RunTest(TestDbLast, "Тест 3(3) из Coursera");
-    tr.RunTest(TestDbRemoveIf, "Тест 3(4) из Coursera");
-    tr.RunTest(TestInsertionOrder, "Тест на порядок вывода");
-    tr.RunTest(TestDatabase, "Тест базы данных с GitHub");
+    TestRunner Tr;
+    Tr.RunTest(TestDbAdd, "Add Method Test");
+    Tr.RunTest(TestDbFind, "FindIf Method Test");
+    Tr.RunTest(TestDbLast, "Last Method Test");
+    Tr.RunTest(TestDatabase, "RemoveIf Method Test");
 }
